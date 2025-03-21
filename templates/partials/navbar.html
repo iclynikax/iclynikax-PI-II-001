@@ -1,0 +1,50 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-color-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'url_home' %}"><img src="{% static 'geral/img/logo.png' %}" width="20%" alt="">iClynikaX</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Área do paciente
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <li><a class="dropdown-item" href="{% url 'url_home' %}">Home</a></li>
+                  <li><a class="dropdown-item" href="{% url 'url_mnhs_cnslts' %}">Minhas consultas</a></li>
+                  <li><a class="dropdown-item" href="{% url 'url_logout' %}">Logout/Sair</a></li>
+                </ul>
+            </li>
+            {% if is_medico %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Área do médico
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{% url 'url_open_horario' %}">Abrir horários</a></li>
+                        <li><a class="dropdown-item" href="{% url 'url_cnslts_medico' %}">Suas consultas</a></li>
+                    </ul>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'url_cdstr_medico' %}">Sou médico</a>
+                </li>
+            {% endif %}
+            {% if request.user.is_superuser %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Cadastro
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{% url 'url_open_horario' %}">Pacientes</a></li>
+                        <li><a class="dropdown-item" href="{% url 'url_cnslts_medico' %}">Médicos</a></li>
+                        <li><a class="dropdown-item" href="{% url 'url_espclddes_mdca' %}">Especialidades</a></li>
+                    </ul>
+                </li>
+            {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
