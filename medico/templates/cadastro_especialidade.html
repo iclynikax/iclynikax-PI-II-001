@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/cadastro_medico.css' %}">
+
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+{% include "partials/navbar.html" %}
+
+
+<div class="container" style="height: 100%;	width: 100%;">
+    <br>
+    <div class="row" >
+        <div class="col-md-8">
+            <p class="p-bold">Cadastro->Especialidades</p>
+            {% if messages %}
+                <br>
+                {% for message in messages %}
+                    <section class="alert {{message.tags}}">
+                        {{message}}
+                    </section>
+                {% endfor %}
+            {% endif %}
+            <br>
+            <form action="{% url 'url_espclddes_cdstro' especialidade.id %}" method="post" enctype='multipart/form-data'>{% csrf_token %}
+                <div class="row" style="min-height: 100%;	width: 100%;">
+                    <label for="">Descrição:</label>
+                    <input type="text" class="form-control shadow-main-color" style="height: 30px;" name="especialidade" placeholder="Descrição da Especialização" value="{{especialidade.especialidade}}"><br><br>
+                    
+                    <label for="">Detalhe:</label>
+                    <textarea  name="detalhe" class="form-control shadow-main-color" style="height: 175px;"></textarea>
+                    <br>
+                    <br>
+
+                    <label for="">Valor consulta:</label>
+                    <input type="number" name="valor_consulta" class="form-control shadow-main-color input-number" style="height: 30px; width: 300px; text-align:right;" placeholder="0,00">
+                    <br>
+                    <br>
+                </div>
+                <input type="submit" value="Salvar" class="btn btn-success btn-dark-color">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+            </form>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+
+</div>
+
+{% endblock 'body' %}
