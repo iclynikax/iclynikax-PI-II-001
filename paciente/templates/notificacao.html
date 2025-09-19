@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+
+    <link rel="stylesheet" href="{% static 'medicos/css/abrir_horario.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/cadastro_medico.css' %}">
+    <link rel="stylesheet" href="{% static 'pacientes/css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'pacientes/css/agendar_horario.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+{% endblock 'head' %}
+
+{% block 'body' %}
+    {% include "partials/navbar.html" %}
+
+    <br>
+    {% if messages %}
+        <br>
+        {% for message in messages %}
+            <section class="alert {{message.tags}}">
+                {{message}}
+            </section>
+        {% endfor %}
+    {% endif %}
+    <br>
+    <div class="container">
+        {% if atrzacao.rspsta == '0' %}
+            <div class="alert alert-danger" role="alert">
+                Autorização Não Aceita. Recusada.
+            </div>
+        {% elif atrzacao.status == '2' %}
+            <div class="alert alert-success" role="alert">
+                Autorização Aceita
+            </div>
+        {% elif atrzacao.status == '3' %}
+            <div class="alert alert-primary" role="alert">
+                Autorização Enviada, aguardando decisão do cliente
+            </div>
+        {% endif %}    
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md">
+                        <p style="font-size: 20px" class="p-bold">Cliente:</p>
+                        <p style="font-size: 18px">{{consulta.paciente.first_name}} {{consulta.paciente.last_name}}<br>
+                        {{ perfil.Endereco }}
+                        </p>
+                        <p title="{{dado_medico.descricao}}"><b>Médico:</b> {{dado_medico.nome}}</p>
+                        <p><b>Data da Consulta: </b>{{consulta.data_aberta.data |date:"d-m-Y"}}</p>
+                        <p><b>Status: </b>{{ consulta.get_status_display }}</p>
+                    </div>
+                </div> 
+
+                <h3 class="p-bold">Detalhes da consulta</h3>
+                <div class="row mb-12">
+                    <div class="col-sm-2">
+                        <div data-mdb-input-init class="form-outline">
+                            <label for="">Espécie:</label>
+                                <select name="get_Pet_Especie" disabled class="form-control shadow-main-color form-select" >
+                                    {% for Pet_Slct in Lst_Pets %}
+                                        <option {% if Pet_Slct.id == pet_Consulta.Pet_id %} selected {% endif %} value="{{ Pet_Slct.id }}">{{ Pet_Slct.Pet }}</option>
+                                    {% endfor %}
+                                </select><br>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div data-mdb-input-init class="form-outline">
+                            <label for="">Raça:</label>
+                            <input type="text" class="form-control shadow-main-color" disabled name="get_Pet_Raca" value="{{pet_Consulta.Pet_Raca}}">
+                        </div>
+                    </div>
+                        <div class="col-sm-2">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="">Pelagem:</label>
+                                <input type="text" class="form-control shadow-main-color" disabled name="get_Pet_Pelagem" value="{{pet_Consulta.Pet_Pelagem}}">
+                            </div>
+                        </div>
+                    <div class="col-sm-2">
+                        <div data-mdb-input-init class="form-outline">
+                            <label for="">Nome:</label>
+                            <input type="text" class="form-control shadow-main-color" disabled name="get_Pet_Nome" value="{{pet_Consulta.Pet_Nome}}">
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div data-mdb-input-init class="form-outline">
+                            <label for="">Sexo:</label>
+                                <select  name="get_Pet_Sexo" id="id_Pet_Sexo" disabled class="form-control shadow-main-color form-select" >
+                                    {% for valor, nome in Lst_Pts_Sxo %}
+                                        <option {% if valor == pet_Consulta.Pet_Sexo %} selected {% endif %} value="{{ valor }}">{{ nome }}</option>
+                                    {% endfor %}
+                                </select>
+                                <br>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div data-mdb-input-init class="form-outline">
+                            <label for="">dt Nascimento:</label>
+                            <input type="text" class="form-control shadow-main-color" disabled maxlength="10" placeholder="DD/MM/YYYY" required name="get_Pet_dtNscmnto" value="{{pet_Consulta.dt_Nscmnto | date:"d/m/Y"}}">
+                            <p id="mensagem"></p>
+                        </div>
+                    </div>
+                </div>
+
+ 
+
+
+
+
+                <hr>
+                <h3 class="p-bold">Detalhes da Autorização</h3>
+                <form id"formntfccao" action="{% url 'url_envia_email_ntficacao' atrzacao.id  %}" method="POST">{% csrf_token %}
+                    <div class="row mb-12">
+                        <div class="col-sm-6">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="">Título:</label>
+                                <input type="text" {% if atrzacao.rspsta != '3' %} disabled {%endif%} class="form-control shadow-main-color" id="Ntfc_Titulo" name="get_Ntfc_Titulo" value="{{atrzacao.titulo}}">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="">dT Envio:</label>
+                                <input type="text" class="form-control shadow-main-color" name="get_Ntfc_dT_Envio" disabled value="{{ atrzacao.dt_envio|date:"d-m-Y"}}">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="">dT Resposta:</label>
+                                <input type="text" class="form-control shadow-main-color" name="get_Ntfc_dT_Envio" disabled title="{% if atrzacao.dt_rspsta == None %} Sem Resposta {% else %} {{ atrzacao.dt_rspsta }} {% endif %}" value="{% if atrzacao.dt_rspsta == None %} Sem Resposta {% else %} {{ atrzacao.dt_rspsta }} {% endif %}">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="">Resposta:</label>
+                                <input type="text" class="form-control shadow-main-color" name="get_Ntfc_rspsta " disabled value="{{ atrzacao.get_rspsta_display }}">
+                            </div>
+                        </div><br><br><br>
+                        <div class="col-sm-12">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="">Detalhe:</label>
+                                <textarea {% if atrzacao.rspsta != '3' %} disabled {%endif%} class="form-control shadow-main-color" rows="10" name="get_Ntfc_Dscrcao">{{ atrzacao.descricao }} </textarea><br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-12">
+                        <input type="hidden" class="form-control shadow-main-color" name="get_id_Consulta" value="{{consulta.id}}">
+                        <input type="hidden" class="form-control shadow-main-color" name="get_id_Ntfccao" value="{{atrzacao.id}}">
+                        <div class="row mb-12">
+                            <div class="col-md-12">
+                                <td>
+                                   {% if atrzacao.rspsta != '3' %} 
+                                        <input type="button" disabled title="Notificação já definida. Não é mais possível fazer alterações nessa notificação." style="text-align:center; cursor:pointer; WIDTH:100%" value="Notificação já definida. Não é mais possível fazer alterações nessa notificação." class="btn btn-success btn-dark-color">
+                                    {% else %}
+                                        <input type="button" id="{{ atrzacao.id  }}" onclick="saveNtfccao(this)" title="Envia Notificação para aprovação" style="text-align:center; cursor:pointer; WIDTH:20%" value="Salva a notificação acima" class="btn btn-success btn-dark-color"> <input type="submit" title="Envia Notificação para aprovação" style="text-align:center; cursor:pointer; WIDTH:79%" value="Enviar eMail desta notificação para aprovação do cliente." class="btn btn-success btn-dark-color">
+                                   {% endif %}
+                                </td>
+                            </div>
+                        </div> 
+                    </div>
+                </form>
+            <div class="col-md"></div>
+        </div>
+        
+    </div>
+
+    <script>
+        function saveNtfccao(obj) {
+            // alert(obj.form.action);
+            obj.form.action ="{% url 'url_salvar_notificacao'  %}";
+            // alert(obj.form.action);
+            //document.getElementById("formntfccao").submit();
+            obj.form.submit();
+            // obj.form.action = "{% url 'url_envia_email_ntficacao' atrzacao.id  %}";
+            // alert(obj.form.action);
+        }
+
+    </script>
+{% endblock 'body' %}

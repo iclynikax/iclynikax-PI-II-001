@@ -31,20 +31,23 @@
             </div>
         {% endif %}    
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="row">
-                    <div class="col-md-3"><img src="{{dado_medico.foto.url}}" class="foto-perfil-card-lg" alt=""></div>
+                    <div class="col-md-3"><img src="{{perfil.Foto.url}}" class="foto-perfil-card-lg" alt=""></div>
                     <div class="col-md">
-                        <p style="font-size: 20px" class="p-bold">Dr(a). {{dado_medico.nome}} <i class="bi bi-patch-check-fill icon-main"></i></p>
-                        <p>{{dado_medico.descricao}}</p>
-                        <p class="p-bold">{{consulta.data_aberta.data}}</p>
+                        <p style="font-size: 20px" class="p-bold">Cliente:</p>
+                        <p style="font-size: 18px">{{consulta.paciente.first_name}} {{consulta.paciente.last_name}}<br>
+                        {{ perfil.Endereco }}
+                        </p>
+                        <p title="{{dado_medico.descricao}}"><b>Médico:</b> {{dado_medico.nome}} - {{dado_medico.descricao}}</p>
+                        <p><b>Data da Consulta: </b>{{consulta.data_aberta.data}}</p>
                     </div>
-                </div> 
+                </div>
+
                 <hr>
                 <br>
                 <div class="row">
                     <div class="col-md">
-                        
                         <p><i class="color-dark bi bi-check-circle-fill"></i> Consulta agendada</p>
                     </div>
                     <div class="col-md">
@@ -54,23 +57,53 @@
                         <p><i class="bi bi-check-circle-fill"></i> Consulta Avaliada</p>
                     </div>
                 </div>
-                <hr>
+                <hr> 
                 <h3 class="p-bold">Detalhes da consulta</h3>
-                <p style="font-size:20px"><i class="bi bi-calendar3 color-dark"></i>&nbsp {{consulta.data_aberta.data}}</p>
-                <p style="font-size:20px"><i class="bi bi-tag-fill color-dark"></i></i>&nbsp R$ {{dado_medico.valor_consulta}}</p>
-                <a style="cursor: auto;" class="btn btn-dark-color-outline btn-lg">Adicione em seu calendário!</a>
-                <hr>
-                <h3 class="p-bold">Como acessar ?</h3>
-                <p>No horário da consulta acesse o link disponível abaixo</p>
+                <div class="row mb-12">
+                    <div class="col-sm-2">
+                        <div data-mdb-input-init class="form-outline">
+                            <label for="">Espécie:</label>
+                                <select name="get_Pet_Especie" disabled class="form-control shadow-main-color form-select" >
+                                    {% for Pet_Slct in Lst_Pets %}
+                                        <option {% if Pet_Slct.id == pet_Consulta.Pet_id %} selected {% endif %} value="{{ Pet_Slct.id }}">{{ Pet_Slct.Pet }}</option>
+                                    {% endfor %}
+                                </select><br>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div data-mdb-input-init class="form-outline">
+                            <label for="">Raça:</label>
+                            <input type="text" class="form-control shadow-main-color" disabled name="get_Pet_Raca" value="{{pet_Consulta.Pet_Raca}}">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div data-mdb-input-init class="form-outline">
+                            <label for="">Nome:</label>
+                            <input type="text" class="form-control shadow-main-color" disabled name="get_Pet_Nome" value="{{pet_Consulta.Pet_Nome}}">
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div data-mdb-input-init class="form-outline">
+                            <label for="">Sexo:</label>
+                                <select  name="get_Pet_Sexo" id="id_Pet_Sexo" disabled class="form-control shadow-main-color form-select" >
+                                    {% for valor, nome in Lst_Pts_Sxo %}
+                                        <option {% if valor == pet_Consulta.Pet_Sexo %} selected {% endif %} value="{{ valor }}">{{ nome }}</option>
+                                    {% endfor %}
+                                </select>
+                                <br>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div data-mdb-input-init class="form-outline">
+                            <label for="">dt Nascimento:</label>
+                            <input type="text" class="form-control shadow-main-color" disabled maxlength="10" placeholder="DD/MM/YYYY" required name="get_Pet_dtNscmnto" value="{{pet_Consulta.dt_Nscmnto | date:"d/m/Y"}}">
+                            <p id="mensagem"></p>
+                        </div>
+                    </div>
+                </div>
                 
-                {% if consulta.status == 'I' and consulta.link %}
-                    <a href="{{consulta.link}}" target="AcssoConsulta"  class="btn btn-success btn-dark-color btn-lg" >Acessar consulta</a>
-                {% else %}
-                    <a href="#"  class="btn btn-success btn-dark-color btn-lg disabled" >Acessar consulta</a>
-                {% endif %}
-                
                 <hr>
-                <h3 class="p-bold">Meus documentos</h3>
+                <h3 class="p-bold">Documentos</h3>
                 <br>
 
                 {% for documento in documentos %}
@@ -79,11 +112,50 @@
                 {% endfor %}
    
                 <br>
-                <br>
-                <br>
-                <br>
+                <hr>
+                <h3 class="p-bold">Notificações/Aprovações</h3>
+                <div class="list-minhas-consultas" >
+                    <table class="table table-success table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Titulo</th>
+                                <th scope="col">Data de Envio</th>
+                                <th scope="col">Resposta</th>
+                                <th scope="col">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ntficcao in ntficcoes %}
+                                <tr>
+                                    <td><a href="{% url 'url_atrzacao' ntficcao.id  consulta.id %}">{{ntficcao.titulo}}</a></td>
+                                    <td><a href="{% url 'url_atrzacao' ntficcao.id  consulta.id %}">{{ntficcao.dt_envio|date:"d-m-Y"}}</a></td>
+                                    <td><a href="{% url 'url_atrzacao' ntficcao.id  consulta.id %}">{{ntficcao.get_rspsta_display}}</a></td>
+                                    <td><a title="Envia Notificação para aprovação" href="{% url 'url_atrzacao' ntficcao.id  consulta.id %}">Enviar Notificação</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if lAddNtfccs > 0  %}
+                    <div class="row">
+                        <div class="col-md">
+                            <td>
+                                <input type="submit" style="text-align:center; cursor:pointer; WIDTH:100%" title="Não é possível adicionar uma nova notificação, pois há notificação com resposta indefinida" disabled value="Não é possível adicionar uma nova notificação, pois há notificação com resposta indefinida. " class="btn btn-success btn-dark-color">
+                            </td>
+                        </div>
+                    </div> 
+                {% else %}
+                    <form action="{% url 'url_add_atrzacao' consulta.id  %}" method="POST">{% csrf_token %}
+                        <div class="row">
+                            <div class="col-md">
+                                <td>
+                                    <input type="submit"  style="text-align:center; cursor:pointer; WIDTH:100%" title="Adiciona uma nova notificação para aprovação do cliente." value="Adiciona uma nova notificação para a consulta acima, para aprovação do cliente. " class="btn btn-success btn-dark-color">
+                                </td>
+                            </div>
+                        </div> 
+                    </form>
+                {% endif %}
             </div>
-            <div class="col-md"></div>
         </div>
         
     </div>

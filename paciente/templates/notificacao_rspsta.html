@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+
+    <link rel="stylesheet" href="{% static 'medicos/css/abrir_horario.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/cadastro_medico.css' %}">
+    <link rel="stylesheet" href="{% static 'pacientes/css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'pacientes/css/agendar_horario.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+{% endblock 'head' %}
+
+{% block 'body' %}
+    {% include "partials/navbar.html" %}
+
+    <br><br>
+    <div class="container">
+        {% if atrzacao.rspsta == '0' %}
+            <div class="alert alert-danger" role="alert">
+                Autorização Não Aceita. Recusada.
+            </div>
+        {% elif atrzacao.status == '2' %}
+            <div class="alert alert-success" role="alert">
+                Autorização Aceita
+            </div>
+        {% elif atrzacao.status == '3' %}
+            <div class="alert alert-primary" role="alert">
+                Autorização Enviada, aguardando decisão do cliente
+            </div>
+        {% endif %}    
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md">
+                        <p style="font-size: 20px" class="p-bold">Cliente:</p>
+                        <p style="font-size: 18px">{{consulta.paciente.first_name}} {{consulta.paciente.last_name}}<br>
+                        {{ perfil.Endereco }}
+                        </p>
+                        <p title="{{dado_medico.descricao}}"><b>Médico:</b> {{dado_medico.nome}}</p>
+                        <p><b>Data do Exame: </b>{{consulta.data_aberta.data |date:"d-m-Y"}}</p>
+                        <p><b>Status: </b>{{ consulta.get_status_display }}</p>
+                    </div>
+                </div> 
+                <hr>
+                <h3 class="p-bold">Detalhes da Autorização</h3>
+                    <p style="font-size: 20px" class="p-bold">Título:</p>
+                    <p style="font-size: 18px">{{ atrzacao.titulo }}<br>
+                    <p style="font-size: 20px" class="p-bold">dT Envio:</p>
+                    <p style="font-size: 18px">{{ atrzacao.dt_envio }}<br>
+                    <p style="font-size: 20px" class="p-bold">Descricao:</p>
+                    <p style="font-size: 18px">{{ atrzacao.descricao }}<br>
+                    <p style="font-size: 20px" class="p-bold">Resposta:</p>
+                    <p style="font-size: 18px">{{ atrzacao.get_rspsta_display }}<br>
+                <hr>
+                <br>
+                <form action="{% url 'url_envia_email_ntficacao' id_Ntfccao %}" method="POST">{% csrf_token %}
+                    <div class="row">
+                        <div class="col-md">
+                            <td>
+                                <input type="submit" title="Envia Notificação para aprovação" value="Enviar eMail desta notificação para aprovação do cliente." class="btn btn-success btn-dark-color">
+                            </td>
+                        </div>
+                    </div> 
+                </form>
+            </div>
+            <div class="col-md"></div>
+        </div>
+        
+    </div>
+
+{% endblock 'body' %}

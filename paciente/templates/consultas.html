@@ -17,7 +17,7 @@
 
     <div class="container" width="100%" height="100%">
         <br>
-        <h2><span class="color-dark">Minhas Consultas</span></h2>
+        <h2><span class="color-dark">Consultas</span></h2>
 
         <div class="row" width="100%" height="100%">
 
@@ -39,6 +39,7 @@
             <table class="table" width="100%" height="100%">
                 <thead>
                   <tr>
+                    <th scope="col">Cliente</th>
                     <th scope="col">Médico</th>
                     <th scope="col">Status</th>
                     <th scope="col">Data</th>
@@ -47,14 +48,14 @@
                 <tbody width="100%" height="100%" style="WIDTH:100%; height:100%;">
                     {% for consulta in minhas_consultas  %}
                         <tr>
-                            <td><a title="{{consulta.id}}" href="{% url 'url_cnslta' consulta.id %}">{{consulta.data_aberta.user.first_name}} {{consulta.data_aberta.user.last_name}}</a></td>
+                            <td><a title="{{consulta.id}}" href="{% url 'url_cnslta' consulta.id %}">{{consulta.paciente.first_name}} {{consulta.paciente.last_name}}</a></td>
+                            <td><a title="{{consulta.id}}" href="{% url 'url_cnslta' consulta.id %}">{{consulta.Medico.nome}}</a></td>
                             <td>{{consulta.get_status_display}}</td>
                             <td>{{consulta.data_aberta.data}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
-              </table>
-
+            </table>
         </div>
 
 

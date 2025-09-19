@@ -44,35 +44,30 @@
             </form>
             <hr>
 
-            <div class="list-medicos">
-                {% for medico in medicos %}
-                <div class="card-medicos shadow-main-color">
-                    <div class="row">
-                        <div class="col-md-3"><img src="{{medico.foto.url}}" class="foto-perfil-card" alt=""></div>
-                        <div class="col-md">
-                            <p style="font-size: 20px" class="p-bold">Dr(a). {{medico.nome}} <i class="bi bi-patch-check-fill icon-main"></i></p>
-                            <p>{{medico.descricao}}</p>
-                        </div>
-                    </div>  
-                    <p><i class="bi bi-map icon-main"></i>&nbsp&nbsp{{medico.rua}}, {{medico.numero}}.</p>
-                    <p><i class="bi bi-calendar2-week icon-main"></i>&nbsp&nbspProxima data: 
-                        {% if medico.proxima_data %}
-                            {{medico.proxima_data}}
-                        {% else %}
-                            Aguarde uma data.
-                        {% endif %}                        
-                    <a href="{% url 'url_escler_hrrio' medico.id %}" class="btn btn-success btn-dark-color">Agendar</a>
+            {% if is_medico %}
+                <div class="list-medicos">
+                    {% for medico in medicos %}
+                    <div class="card-medicos shadow-main-color">
+                        <div class="row">
+                            <div class="col-md">
+                                <p style="font-size: 20px" class="p-bold">Dr(a). {{medico.nome}} <i class="bi bi-patch-check-fill icon-main"></i></p>
+                                <p>{{medico.descricao}}</p>
+                            </div>
+                        </div>  
+                        <p><i class="bi bi-map icon-main"></i>&nbsp&nbsp{{medico.rua}}, {{medico.numero}}.</p>
+                        <p><i class="bi bi-calendar2-week icon-main"></i>&nbsp&nbspProxima data: 
+                            {% if medico.proxima_data %}
+                                {{medico.proxima_data}}
+                            {% else %}
+                                Aguarde uma data.
+                            {% endif %}                        
+                        <a href="{% url 'url_escler_hrrio' medico.id %}" class="btn btn-success btn-dark-color">Agendar</a>
+                    </div>
+                    <br>
+                    {% endfor %}
+                    <br>
                 </div>
-                <br>
-                {% endfor %}
-                                
-
-                <br>
-                
-
-
-            </div>
-
+            {% endif %}
         </div>
         <div class="col-md-4">
             <p style="font-size: 25px" class="p-bold">Lembretes</p>

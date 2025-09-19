@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/cadastro_medico.css' %}">
+
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+{% include "partials/navbar.html" %}
+
+
+<div class="container">
+
+        <div class="row" >
+            <p class="p-bold">Cadastro de Pet's do Cliente</p> 
+            <div class="col-md-3">
+                <div class="card">
+                <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+
+                    <img title="Imagem do Cliente" style="min-height: auto;	width: 300px;" src="{{ Pet_Cliente.Pet_Foto.url }}" alt="Imagem do Cliente">
+                    <div class="social-links mt-2">
+                    <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+                </div>
+
+            </div>
+            <div class="col-md-9">
+                {% if messages %}
+                    <br>
+                    {% for message in messages %}
+                        <section class="alert {{message.tags}}">
+                            {{message}}
+                        </section>
+                    {% endfor %}
+                {% endif %}
+                <form action="{% url 'url_pet_clnte_cdstro' Pet_Cliente.id %}" method="post" enctype='multipart/form-data'>{% csrf_token %}
+                    <div class="row mb-12">
+                        <div class="col-sm-8">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="">Cliente:</label>
+                                <input type="text" class="form-control shadow-main-color" style="wheight: 30px; height: 30px; " name="get_first_nome" disabled  value="{{cliente.first_name}} {{cliente.last_name}}"><br>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="">Telefone/Celular (WhastApp):</label>
+                                <input type="text" class="form-control shadow-main-color" style="wheight: 30px; height: 30px; " name="get_Celular" disabled value="{{perfil.Celular}}"><br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-12">
+                        <div class="col-sm-2">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="">Espécie:</label>
+                                    <select name="get_Pet_Especie" class="form-control shadow-main-color form-select" >
+                                        {% for Pet_Slct in Lst_Pets %}
+                                            <option {% if Pet_Slct.id == Pet_Cliente.Pet.id %} selected {% endif %} value="{{ Pet_Slct.id }}">{{ Pet_Slct.Pet }}</option>
+                                        {% endfor %}
+                                    </select><br>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="">Raça:</label>
+                                <input type="text" class="form-control shadow-main-color" name="get_Pet_Raca" value="{{Pet_Cliente.Pet_Raca}}">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="">Pelagem:</label>
+                                <input type="text" class="form-control shadow-main-color" name="get_Pet_Pelagem" value="{{Pet_Cliente.Pet_Pelagem}}">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="">Nome:</label>
+                                <input type="text" class="form-control shadow-main-color" name="get_Pet_Nome" value="{{Pet_Cliente.Pet_Nome}}">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="">Sexo:</label>
+                                    <select  name="get_Pet_Sexo" id="id_Pet_Sexo" class="form-control shadow-main-color form-select" >
+                                        {% for valor, nome in Lst_Pts_Sxo %}
+                                            <option {% if valor == Pet_Cliente.Pet_Sexo %} selected {% endif %} value="{{ valor }}">{{ nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <br>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="">dt Nascimento:</label>
+                                <input type="text" class="form-control shadow-main-color" maxlength="10" placeholder="DD/MM/YYYY" required name="get_Pet_dtNscmnto" value="{{Pet_Cliente.dt_Nscmnto | date:"d/m/Y"}}">
+                                <p id="mensagem"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" value="Salvar" class="btn btn-success btn-dark-color">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </form>
+            </div>
+            <div class="col-md-12">
+                <h3 class="p-bold">Consultas</h3>
+                <div class="list-minhas-consultas" width="100%" height="100%" style="WIDTH:100%; height:100%;">
+                    <table class="table" width="100%" height="100%">
+                        <thead>
+                        <tr>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Médico</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Data</th>
+                        </tr>
+                        </thead>
+                        <tbody width="100%" height="100%" style="WIDTH:100%; height:100%;">
+                            {% for consulta in petConsultas  %}
+                                <tr>
+                                    <td><a title="{{consulta.id}}" href="{% url 'url_cnslta' consulta.id %}">{{consulta.paciente.first_name}} {{consulta.paciente.last_name}}</a></td>
+                                    <td><a title="{{consulta.id}}" href="{% url 'url_cnslta' consulta.id %}">{{consulta.Medico.nome}}</a></td>
+                                    <td>{{consulta.get_status_display}}</td>
+                                    <td>{{consulta.data_aberta.data}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+</div>
+
+{% endblock 'body' %}
