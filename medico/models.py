@@ -13,6 +13,23 @@ class Especialidades(models.Model):
     def __str__(self):
         return self.especialidade
 
+class Procedimentos(models.Model):
+    procedimento = models.CharField(max_length=175)
+    detalhe = models.TextField(null=True, blank=True)
+    icone = models.ImageField(upload_to="icones", null=True, blank=True)
+
+    def __str__(self):
+        return self.procedimento
+
+class Exames(models.Model):
+    exame = models.CharField(max_length=175)
+    detalhe = models.TextField(null=True, blank=True)
+    icone = models.ImageField(upload_to="icones", null=True, blank=True)
+
+    def __str__(self):
+        return self.exame
+
+
 
 class DadosMedico(models.Model):
     crm = models.CharField(max_length=30)

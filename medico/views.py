@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from . models import Especialidades, DadosMedico, is_medico, DatasAbertas
-from paciente.models import Consulta, Documento
+from paciente.models import Consulta, Documento, Notificacao, Pet_Cliente
 from django.contrib import messages
 from django.contrib.messages import constants
 from datetime import datetime, timedelta
@@ -150,6 +150,41 @@ def fnct_fnlzar_cnslta(request, id_consulta):
     slct_cnslta.save()
 
     return redirect(f'/medicos/consulta_area_medico/{id_consulta}')    
+
+
+
+def fnctn_add_notfcacao(request, id_consulta):
+    if not is_medico(request.user):
+        messages.add_message(request, constants.WARNING, 'Somente médicos podem acessar essa página.')
+        return redirect('/usuarios/sair')
+    
+    consulta = Consulta.objects.get(id=id_consulta)
+
+    if consulta.data_aberta.user != request.user:
+        messages.add_message(request, constants.ERROR, 'Essa consulta não é sua!')
+        return redirect(f'/medicos/consulta_area_medico/{id_consulta}')
+    
+    titulo = request.POST.get('titulo')
+    Nmr_WhtsApp = request.FILES.get('Nmr_WhtsApp')
+
+    if not Nmr_WhtsApp:
+        messages.add_message(request, constants.WARNING, 'Adicione o documento.')
+        return redirect(f'/medicos/consulta_area_medico/{id_consulta}')
+
+    Nmr_WhtsApp = Notificacao(
+        consulta    = consulta,
+        titulo      = titulo,
+        Nmr_WhtsApp = Nmr_WhtsApp
+
+    )
+
+    Notificacao.save()
+
+    messages.add_message(request, constants.SUCCESS, 'Documento enviado com sucesso!')
+    return redirect(f'/medicos/consulta_area_medico/{id_consulta}')
+    
+
+
 
 
 
