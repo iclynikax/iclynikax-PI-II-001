@@ -17,12 +17,13 @@ SECRET_KEY = 'django-insecure-u#p&fcmkx%e)mb-3=kr(po)01r$02j9$z_(ps#(4de+a9j6nuf
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+#DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['iclynikax.construplus.net/''construplus.net/iclynikax',"*"]
+
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -34,6 +35,7 @@ INSTALLED_APPS = [
     'medico',
     'paciente',
 ]
+INSTALLED_APPS += ['corsheaders']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -44,6 +46,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+MIDDLEWARE = ['corsheaders.middleware.CorsMiddleware'] + MIDDLEWARE
+CORS_ALLOW_ALL_ORIGINS = True  # ou configure domínios específicos
 
 ROOT_URLCONF = 'app.urls'
 
@@ -77,6 +81,7 @@ DATABASES = {
 }
 
 
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -107,6 +112,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Configurações para formatar valores digitais decimais
+THOUSAND_SEPARATOR='.',
+USE_THOUSAND_SEPARATOR=True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -144,3 +152,4 @@ MESSAGE_TAGS = {
     constants.INFO: 'alert-info',
     constants.WARNING: 'alert-warning',
 }
+
