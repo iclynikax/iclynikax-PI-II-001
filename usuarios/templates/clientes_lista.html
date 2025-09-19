@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+ 
+{% include "partials/navbar.html" %}
+
+    <div class="container" style="min-height: 100%;	width: 100%;">
+        <br>
+        {% if messages %}
+            <br>
+            {% for message in messages %}
+                <section class="alert {{message.tags}}">
+                    {{message}}
+                </section>
+            {% endfor %}
+        {% endif %}
+        <h2><span class="color-dark">Lista de Clientes</span></h2>
+        <div class="list-minhas-consultas">
+            <table class="table table-success table-striped">
+                <thead>
+                    <tr>
+                    <th scope="col">Nome do Cliente</th>
+                    <th scope="col">Nome de Usuário</th>
+                    <th scope="col">eMail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in RlcaoDClntes  %}
+                        <tr>
+                            <td><a href="{% url 'url_clnts_edit' cliente.id %}">{{cliente.first_name}} {{cliente.last_name}}</a></td>
+                            <td><a href="{% url 'url_clnts_edit' cliente.id %}">{{cliente.username}}</a></td>
+                            <td><a href="{% url 'url_clnts_edit' cliente.id %}">{{cliente.email}}</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+
+         
+
+{% endblock 'body' %}
+

@@ -19,8 +19,8 @@
                     </section>
                     <hr>
                     
-                    <form action="{% url 'url_enviar_email_restar_senha' %}" method="POST">{% csrf_token %}
-                        <h2 class="fonte-destaque1">Resetar/Redefinindo sua senha...</h2>
+                    <form action="{% url 'url_fnct_upgrde_snha' Usuario.token %}" method="POST">{% csrf_token %}
+                        <h2 class="fonte-destaque1">Redefinindo sua senha...</h2>
                         {% if messages %}
                             <br>
                             {% for message in messages %}
@@ -30,13 +30,23 @@
                             {% endfor %}
                         {% endif %}
                         <br>
-                        <label for="">eMail</label>
-                        <input type="text" name="get_email" id="" class="form-control" placeholder="Digite seu eMail ..." required>
+                        <label for="">Usuário:</label>
+                        <input type="text" name="NomeDoUsuario" id="" class="form-control" disabled value="{{Usuario.user.first_name}} {{Usuario.user.last_name}}">
+                        <br>
+                        <label for="">eMail:</label>
+                        <input type="text" name="username" id="" class="form-control" disabled value="{{Usuario.user.email}}">
+                        <br>
+                        <br>
+                        <label for="">Digite sua nova senha:</label>
+                        <input type="password" name="getsenha1" id="" class="form-control" placeholder="Digite sua senha ..." required>
+                        <br>
+                        <br>
+                        <label for="">Redigite sua nova senha:</label>
+                        <input type="password" name="getsenha2" id="" class="form-control" placeholder="Redigite sua senha ..." required>
                         <br>
                        
-                        <input type="submit" value="Resetar Senha" class="btn btn-success btn-dark-color">
+                        <input type="submit" value="Salvar sua nova senha" class="btn btn-success btn-dark-color">
                         <a href="{% url 'url_login' %}" class="btn btn-dark-color-outline">Já possui conta?</a>
-                        <a href="{% url 'url_cadastro' %}" class="btn btn-dark-color-outline">Não possui conta?</a>
                     </form>
                 </div>
 

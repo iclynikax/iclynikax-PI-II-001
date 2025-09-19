@@ -31,7 +31,7 @@
                         {% endif %}
                         <br>
                         <label for="">Username</label>
-                        <input type="text" name="username" id="" class="form-control" placeholder="Username ..." required>
+                        <input type="text" name="username" id="" class="form-control" placeholder="Nome de Usuário ..." required>
                         <br>
                         
                        
@@ -39,7 +39,7 @@
                         <input type="password" name="senha" class="form-control" placeholder="Digite sua senha ..." required>
                         <br>
 
-                        <input type="submit" value="Logar" class="btn btn-success btn-dark-color"> <a href="{% url 'url_cadastro' %}" class="btn btn-dark-color-outline">Não possui conta?</a> <a href="{% url 'URL_rcprrusrnme' %}" class="btn btn-dark-color-outline">Recuperar seu username?</a>
+                        <input type="submit" value="Logar" class="btn btn-success btn-dark-color"> <a href="{% url 'url_resetar' %}" class="btn btn-dark-color-outline">Resetar senha?</a> <a href="{% url 'URL_rcprrusrnme' %}" class="btn btn-dark-color-outline">Recuperar nome de usuário?</a>
                     </form>
                 </div>
 

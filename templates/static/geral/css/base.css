@@ -6,6 +6,7 @@
 
 }
 
+
 .bg-color-dark{
 
     background-color: var(--main-color);
@@ -29,3 +30,8 @@
 .input-number {
     -moz-appearance: textfield;
 }
+.input-disabled {
+    pointer-events: none;
+    background-color: #e9ecef; /* cor típica de campo desabilitado */
+    color: #6c757d;
+  }

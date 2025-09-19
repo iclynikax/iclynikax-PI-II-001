@@ -1,0 +1,441 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/cadastro_medico.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+{% include "partials/navbar.html" %}
+
+
+<div class="container">
+
+        <div class="row" >
+ 	    <div class="pagetitle">
+               <h1>Clientes</h1>
+               <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="../../../paciente/home/">Home</a></li>
+                    <li class="breadcrumb-item">Cadastro</li>
+                    <li class="breadcrumb-item active">Clientes</li>
+               </ol>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="card">
+                <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+                    <img title="Imagem do Cliente" style="min-height: auto;	width: 200px;" src="{{ perfil.Foto.url }}" alt="Imagem do Cliente" class="rounded-circle">
+                    <h3 style="text-align: center">{{cliente.first_name}} {{cliente.last_name}}</h2>
+                    <h5 style="text-align: center">{{perfil.Cargo}}</h3>
+                    <div class="social-links mt-2">
+                    <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+                </div>
+
+            </div>
+            <div class="col-md-8">
+                {% if messages %}
+                    <br>
+                    {% for message in messages %}
+                        <section class="alert {{message.tags}}">
+                            {{message}}
+                        </section>
+                    {% endfor %}
+                {% endif %}
+                <form action="{% url 'url_clnts_edit' cliente.id %}" method="post" enctype='multipart/form-data'>{% csrf_token %}
+                    <div class="row">
+                        <label for="">Primeiro Nome:</label>
+                        <input type="text" class="form-control shadow-main-color" style="height: 30px;" name="get_first_nome" placeholder="Descrição do Primeiro nome" value="{{cliente.first_name}}"><br><br>
+
+                        <label for="">Segundo Nome:</label>
+                        <input type="text" class="form-control shadow-main-color" style="height: 30px;" name="get_last_nome" placeholder="Descrição do Segundo/Sobrenome" value="{{cliente.last_name}}"><br><br>
+
+                        <label for="">Telefone/Celular (WhastApp):</label>
+                        <input type="text" class="form-control shadow-main-color" style="height: 30px;" name="get_celular" placeholder="Número do seu celular" value="{{perfil.Celular}}"><br><br>
+
+
+                        <label for="">Cargo:</label>
+                        <input type="text" class="form-control shadow-main-color" style="height: 30px;" name="get_cargo" placeholder="Número do seu celular" value="{{perfil.Cargo}}"><br><br>
+
+                        <br>
+                        <br>
+                    </div>
+                    <input type="submit" value="Salvar" class="btn btn-success btn-dark-color">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </form>
+            </div>
+            
+            <div class="col-md-12">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pets-tab" data-bs-toggle="tab" data-bs-target="#pets" type="button" role="tab" aria-controls="home" aria-selected="true">PETs</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="enderecos-tab" onClick="slctEndereco();" data-bs-toggle="tab" data-bs-target="#endereco" type="button" role="tab" aria-controls="profile" aria-selected="false">Endereços</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="enderecos-tab" data-bs-toggle="tab" data-bs-target="#mapgoogle" type="button" role="tab" aria-controls="profile" aria-selected="false">Mapa/Rota</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                       <button class="nav-link" id="consultas-tab" data-bs-toggle="tab" data-bs-target="#contatos" type="button" role="tab" aria-controls="contact" aria-selected="false">Consultas</button>
+                    </li>
+                </ul>
+                <div class="tab-content pt-2" id="myTabContent">
+                <div class="tab-pane fade show active" id="pets" role="tabpanel" aria-labelledby="pets">
+                    <div class="col-md-12">
+                        {% if messages %}
+                            <br>
+                            {% for message in messages %}
+                                <section class="alert {{message.tags}}">
+                                    {{message}}
+                                </section>
+                            {% endfor %}
+                        {% endif %}
+                        <form action="{% url 'url_pet_clnte_cdstro' cliente.id %}" method="post" enctype='multipart/form-data'>{% csrf_token %}
+                            <div class="row mb-12">
+                                <div class="col-sm-2">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <label for="">Espécie:</label>
+                                            <select name="get_Pet_Especie" class="form-control shadow-main-color form-select" >
+                                                {% for Pet_Slct in Lst_Pets %}
+                                                    <option {% if Pet_Slct.id == Pet_Cliente.Pet.id %} selected {% endif %} value="{{ Pet_Slct.id }}">{{ Pet_Slct.Pet }}</option>
+                                                {% endfor %}
+                                            </select><br>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <label for="">Raça:</label>
+                                        <input type="text" class="form-control shadow-main-color" name="get_Pet_Raca" value="{{Pet_Cliente.Pet_Raca}}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <label for="">Pelagem:</label>
+                                        <input type="text" class="form-control shadow-main-color" name="get_Pet_Pelagem" value="{{Pet_Cliente.Pet_Pelagem}}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <label for="">Nome:</label>
+                                        <input type="text" class="form-control shadow-main-color" name="get_Pet_Nome" value="{{Pet_Cliente.Pet_Nome}}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <label for="">Sexo:</label>
+                                            <select  name="get_Pet_Sexo" id="id_Pet_Sexo" class="form-control shadow-main-color form-select" >
+                                                {% for valor, nome in Lst_Pts_Sxo %}
+                                                    <option {% if valor == Pet_Cliente.Pet_Sexo %} selected {% endif %} value="{{ valor }}">{{ nome }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <br>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <label for="">dt Nascimento:</label>
+                                        <input type="text" class="form-control shadow-main-color" maxlength="10" placeholder="DD/MM/YYYY" required name="get_Pet_dtNscmnto" value="{{Pet_Cliente.dt_Nscmnto | date:"d/m/Y"}}">
+                                        <p id="mensagem"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="submit" value="Adicionar um novo Pet do Cliente" class="btn btn-success btn-dark-color">
+                            <br>
+                            <br>
+                        </form>
+                    </div>
+
+                    <div class="list-minhas-consultas">
+                        <table class="table table-success table-striped">
+                               <thead>
+                                   <tr>
+                                       <th scope="col">Espécie</th>
+                                       <th scope="col">Raça</th>
+                                       <th scope="col">Nome</th>
+                                       <th scope="col">Sexo</th>
+                                       <th scope="col">Nascimento</th>
+                                   </tr>
+                               </thead>
+                               <tbody>
+                                   {% for PetCliente in Pets_Cliente %}
+                                       <tr>
+                                           <td><a href="{% url 'url_pet_clnte_cdstro' PetCliente.id %}">{{PetCliente.Pet.Pet}}</a></td>
+                                           <td><a href="{% url 'url_pet_clnte_cdstro' PetCliente.id %}">{{PetCliente.Pet_Raca}}</a></td>
+                                           <td><a href="{% url 'url_pet_clnte_cdstro' PetCliente.id %}">{{PetCliente.Pet_Nome}}</a></td>
+                                           <td><a href="{% url 'url_pet_clnte_cdstro' PetCliente.id %}">{{PetCliente.get_Pet_Sexo_display}}</a></td>
+                                           <td><a href="{% url 'url_pet_clnte_cdstro' PetCliente.id %}" Title = "4 Anos e 5 meses" >{{PetCliente.dt_Nscmnto|date:"d-m-Y"}}</a></td>
+                                       </tr>
+                                   {% endfor %}
+                               </tbody>
+                        </table>
+                   </div>
+                </div>
+                <div class="tab-pane fade form-group col-md-12" id="endereco" role="tabpanel" aria-labelledby="enderecos">
+	                <form name="frm_seekCEP">
+                        <div class="tab-pane col-md-5" id="get_dados" role="tabpanel" style="height: 35px; width: 110px;">
+                            <input type="text" id="cep" name="cep" onchange="seekCEP()" oninput="mascaraCEP(this)" class="form-control shadow-main-color" style="height: 30px; width:110px; text-align: right;" maxlength="9" name="get_cep_busca" title="Digite somente números." placeholder="CEP" value="{{ Endrc_Cli.cep|default:'' }}">
+                        </div>
+                    </form>
+                    <form action="{% url 'url_endereco_clnte_add' cliente.id  %}" method="post" enctype='multipart/form-data'>{% csrf_token %}
+                        <div class="row mb-12" id="dados-endereco" style="display: none;">
+                            <div id="dados-endereco-rua-numero"class="form-group row mb-12">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="logradouro">Logradouro</label>
+                                        <input type="text" id="logradouro" name="get_logradouro" class="form-control input-disabled" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <label for="numero">Número</label>
+                                        <input type="text" id="numero" name="get_numero" style="text-align: right;" maxlength="9" class="form-control" >
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="complemento">Complento</label>
+                                        <input type="text" id="Complemento" name="get_complemento" class="form-control" placeholder="Apartamento, casa, fundos...">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="dados-Bairro-Complemento"class="form-group row mb-12">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="bairro">Bairro</label>
+                                        <input type="text" id="bairro" name="get_bairro" class="form-control input-disabled" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="cidade">Cidade</label>
+                                        <input type="text" id="cidade" name="get_cidade" class="form-control input-disabled" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <label for="estado">Estado</label>
+                                        <input type="text" id="estado" name="get_estado" class="form-control input-disabled" readonly>
+                                        <input type="hidden" style="height: 0px; width: 0px;" id="uf" name="get_uf" class="form-control input-disabled" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <label for="estado">CEP</label>
+                                        <input type="text" id="say_cep" name="say_cep" class="form-control input-disabled" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="dados-Referencia-Endereco"class="form-group row mb-12">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="referencia">Referência</label>
+                                        <input type="text" id="referencia" name="get_referencia" maxlength="175" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <input type="submit" value="Adiciona o novo endereço acima" class="btn btn-success btn-dark-color">
+                            <br>
+                            <br>
+                        </div>
+                    </form>
+                    <div class="list-minhas-consultas" >
+                        <table class="table table-success table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">CEP</th>
+                                    <th scope="col">Endereço</th>
+                                    <th scope="col">Bairro</th>
+                                    <th scope="col">Cidade</th>
+                                    <th scope="col">Referência</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for EndrcCli in Endrcs_Cli %}
+                                    <tr>
+                                        <td><a href="{% url 'url_ender_clnte_prfl' EndrcCli.id %}">{{EndrcCli.CEP}}</a></td>
+                                        <td><a href="{% url 'url_ender_clnte_prfl' EndrcCli.id %}">{{EndrcCli.Endereco}}, {{EndrcCli.Numero}}</a></td>
+                                        <td><a href="{% url 'url_ender_clnte_prfl' EndrcCli.id %}">{{EndrcCli.Bairro}}</a></td>
+                                        <td><a href="{% url 'url_ender_clnte_prfl' EndrcCli.id %}">{{EndrcCli.Cidade}}/{{EndrcCli.UF}}</a></td>
+                                        <td><a href="{% url 'url_ender_clnte_prfl' EndrcCli.id %}">{{EndrcCli.Referencia}}</a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="mapgoogle" role="tabpanel" aria-labelledby="mapaGoogle">
+                    <div class="tab-pane col-md-1" id="get_dados" role="tabpanel" style="height: 35px; width: 100%;">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.123456789!2d-51.0703424!3d-21.6826696!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9496a3dc05c53ce1%3A0x417e1569592bae30!2sCl%C3%ADnica%20Veterin%C3%A1ria%20Adamantina!5e0!3m2!1spt-BR!2sbr!4v1234567890"
+                            width="100%" 
+                            height="450" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="contatos" role="tabpanel" aria-labelledby="contatos">
+                     <div class="list-minhas-consultas" >
+                        <table class="table table-success table-striped">
+                               <thead>
+                                   <tr>
+                                       <th scope="col">eMail</th>
+                                       <th scope="col">Nome</th>
+                                       <th scope="col">Descrição</th>
+                                   </tr>
+                               </thead>
+                               <tbody>
+                                   {% for PetCliente in Pets_Cliente %}
+                                       <tr>
+                                           <td><a href="{% url 'url_pet_clnte_cdstro' PetCliente.id %}">{{PetCliente.Pet.Pet}}</a></td>
+                                           <td><a href="{% url 'url_pet_clnte_cdstro' PetCliente.id %}">{{PetCliente.Pet_Raca}}</a></td>
+                                           <td><a href="{% url 'url_pet_clnte_cdstro' PetCliente.id %}">{{PetCliente.Pet_Nome}}</a></td>
+                                       </tr>
+                                   {% endfor %}
+                               </tbody>
+                        </table>
+                   </div>
+                </div>
+            </div>
+        </div>
+
+
+</div>
+  <!-- Script to apply the mask -->
+<script>
+    function mascaraCEP(input) {
+      const valor = input.value.replace(/\D/g, ''); // Remove tudo que não for número
+      input.value = valor.replace(/^(\d{5})(\d)/, '$1-$2'); // Insere o hífen após o quinto dígito
+    }
+//------------------------------------------------------------------------------------------------------------
+    function seekCEP() {
+    const estados = {
+    AC: "Acre",
+    AL: "Alagoas",
+    AP: "Amapá",
+    AM: "Amazonas",
+    BA: "Bahia",
+    CE: "Ceará",
+    DF: "Distrito Federal",
+    ES: "Espírito Santo",
+    GO: "Goiás",
+    MA: "Maranhão",
+    MT: "Mato Grosso",
+    MS: "Mato Grosso do Sul",
+    MG: "Minas Gerais",
+    PA: "Pará",
+    PB: "Paraíba",
+    PR: "Paraná",
+    PE: "Pernambuco",
+    PI: "Piauí",
+    RJ: "Rio de Janeiro",
+    RN: "Rio Grande do Norte",
+    RS: "Rio Grande do Sul",
+    RO: "Rondônia",
+    RR: "Roraima",
+    SC: "Santa Catarina",
+    SP: "São Paulo",
+    SE: "Sergipe",
+    TO: "Tocantins"
+    };            
+    const idUF = {
+    AC: 1,
+    AL: 2,
+    AP: 3,
+    AM: 4,
+    BA: 5,
+    CE: 6,
+    DF: 7,
+    ES: 8,
+    GO: 9,
+    MA: 10,
+    MT: 11,
+    MS: 12,
+    MG: 13,
+    PA: 14,
+    PB: 15,
+    PR: 16,
+    PE: 17,
+    PI: 18,
+    RJ: 19,
+    RN: 20,
+    RS: 21,
+    RO: 22,
+    RR: 23,
+    SC: 24,
+    SP: 25,
+    SE: 26,
+    TO: 27
+    };
+    const say_cep = document.getElementById("cep").value
+	const cep = document.getElementById("cep").value.replace(/\D/g, '');
+      	if (cep.length !== 8) {
+           alert("Digite um CEP válido com 8 números.");
+           return;
+        }
+      fetch(`https://brasilapi.com.br/api/cep/v1/${cep}`)
+        .then(response => {
+          if (!response.ok) throw new Error("CEP não encontrado...");
+          return response.json();          
+        })
+
+        .then(data => {
+          document.getElementById("logradouro").value = data.street || '';
+          document.getElementById("bairro").value = data.neighborhood || '';
+          document.getElementById("cidade").value = data.city || '';
+          document.getElementById("estado").value = estados[data.state] || '';
+          document.getElementById("uf").value = idUF[data.state] || '';
+          document.getElementById("say_cep").value = say_cep || '';
+          document.getElementById("endereco").style.display = "block";
+          // alert(document.getElementById("uf").value);
+          // 👉 Foca no campo número após preencher os dados
+          const campoNumero = document.getElementById("numero");
+          if (campoNumero){
+              campoNumero.focus();
+             }
+        })
+        .catch(error => {
+          alert("Erro ao buscar CEP: " + error.message);
+          document.getElementById("dados-endereco").style.display = "none";
+          document.getElementById("cep").focus();
+        });
+        document.getElementById("dados-endereco").style.display = "block";
+    }
+//----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+//  Posiciona o cursor no campo CEP, para que seja digitado o cep a ser realizado a busca.
+    function slctEndereco(){
+         // Aguarda um pequeno tempo para garantir que a aba foi exibida
+         setTimeout(() => {
+         const campoCEP = document.getElementById("cep");
+               if (campoCEP) {
+                   campoCEP.focus();
+               }
+         }, 200); // Ajuste o tempo se necessário
+    }
+//----------------------------------------------------------------------------------------------
+
+</script>
+{% endblock 'body' %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+ 
+{% include "partials/navbar.html" %}
+
+    <div class="container" style="min-height: 100%;	width: 100%;">
+        <br>
+        {% if messages %}
+            <br>
+            {% for message in messages %}
+                <section class="alert {{message.tags}}">
+                    {{message}}
+                </section>
+            {% endfor %}
+        {% endif %}
+        <h2><span class="color-dark">Agenda</span></h2>
+
+        <hr>
+
+         
+
+{% endblock 'body' %}
+

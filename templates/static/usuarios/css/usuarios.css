@@ -1,8 +1,15 @@
+html {
+    height: 100%;
+ }
+ 
+ body {
+    height: 100%;
+ }
+
 .bg-main{
     background-color: var(--main-color);
     height: 100vh;
 }
-
 
 
 .cont-cadastro{
@@ -67,3 +74,9 @@
 	background-color: #16202F;
 }
 /*# sourceMappingURL=mouldifi-core.css.map */
+
+.input-disabled {
+    pointer-events: none;
+    background-color: #e9ecef; /* cor típica de campo desabilitado */
+    color: #6c757d;
+  }
