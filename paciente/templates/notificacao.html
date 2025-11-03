@@ -13,19 +13,23 @@
 {% endblock 'head' %}
 
 {% block 'body' %}
-    {% include "partials/navbar.html" %}
-
-    <br>
+    <main id="main" class="main">
     {% if messages %}
         <br>
         {% for message in messages %}
-            <section class="alert {{message.tags}}">
-                {{message}}
+            <section class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+                <i class="bi 
+                    {% if message.tags == 'success' %}bi-check-circle-fill text-success
+                    {% elif message.tags == 'error' %}bi-x-circle-fill text-danger
+                    {% elif message.tags == 'warning' %}bi-exclamation-triangle-fill text-warning
+                    {% else %}bi-info-circle-fill text-info{% endif %}
+                "></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </section>
         {% endfor %}
+        <br>
     {% endif %}
-    <br>
-    <div class="container">
         {% if atrzacao.rspsta == '0' %}
             <div class="alert alert-danger" role="alert">
                 Autorização Não Aceita. Recusada.
@@ -40,18 +44,24 @@
             </div>
         {% endif %}    
         <div class="row">
+            <div class="pagetitle">
+                <h1>Notificações da Autoricação</h1>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'url_home' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'url_atrzacoes' %}">Autorizações</a></li>
+                    <li class="breadcrumb-item active">Notificações</li>
+                </ol>
+            </div>
             <div class="col-md-12">
                 <div class="row">
+                    <div class="col-md-2"><img src="{{perfil.Foto.url}}" class="rounded-circle" style="height: auto; max-width: 255px;" alt="Foto do Cliente"></div>
                     <div class="col-md">
-                        <p style="font-size: 20px" class="p-bold">Cliente:</p>
-                        <p style="font-size: 18px">{{consulta.paciente.first_name}} {{consulta.paciente.last_name}}<br>
-                        {{ perfil.Endereco }}
-                        </p>
-                        <p title="{{dado_medico.descricao}}"><b>Médico:</b> {{dado_medico.nome}}</p>
-                        <p><b>Data da Consulta: </b>{{consulta.data_aberta.data |date:"d-m-Y"}}</p>
-                        <p><b>Status: </b>{{ consulta.get_status_display }}</p>
+                        <p class="p-bold"><a onClick="acssaclinte(this)" style="cursor:pointer;" >.<b>Cliente: </b>{{consulta.paciente.first_name}} {{consulta.paciente.last_name}}</a>
+                        <p><b>Endereço: </b>{{ perfil.Endereco }} - {{ perfil.Cidade }}/{{ perfil.UF }}</p>
+                        <p title="{{dado_medico.descricao}}"><b>Médico:</b> {{dado_medico.nome}} - {{dado_medico.descricao}}</p>
+                        <p><b>Data da Consulta: </b>{{consulta.data_aberta.data}}</p>
                     </div>
-                </div> 
+                </div>
 
                 <h3 class="p-bold">Detalhes da consulta</h3>
                 <div class="row mb-12">
@@ -162,7 +172,7 @@
             <div class="col-md"></div>
         </div>
         
-    </div>
+    </main>
 
     <script>
         function saveNtfccao(obj) {
@@ -174,6 +184,19 @@
             // obj.form.action = "{% url 'url_envia_email_ntficacao' atrzacao.id  %}";
             // alert(obj.form.action);
         }
-
+        function acssaclinte(obj){
+            open("{% url 'url_clnts_edit' pet_Consulta.cliente.id %}", "_self");        
+        }
     </script>
+
+
+    <!--Ativa as opções do menu principal esquerdo -->
+    <script language="JavaScript">
+        <!--
+            document.getElementById('components-nav').className ='nav-content collapse show';
+            document.getElementById('sidebar-nav-Atendimento-autorizações').className ='active';
+        //-->
+    </script>
+    
+    
 {% endblock 'body' %}

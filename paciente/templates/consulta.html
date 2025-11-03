@@ -1,44 +1,42 @@
 {% extends "base.html" %}
 {% load static %}
+<!doctype html>
+<html lang="pt-BR">
+
 
 {% block 'head' %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
 
-    <link rel="stylesheet" href="{% static 'medicos/css/abrir_horario.css' %}">
-    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
-    <link rel="stylesheet" href="{% static 'medicos/css/cadastro_medico.css' %}">
-    <link rel="stylesheet" href="{% static 'pacientes/css/home.css' %}">
-    <link rel="stylesheet" href="{% static 'pacientes/css/agendar_horario.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
 
 {% endblock 'head' %}
 
 {% block 'body' %}
-    {% include "partials/navbar.html" %}
 
-    <br><br>
-    <div class="container">
-        {% if consulta.status == 'C' %}
-            <div class="alert alert-danger" role="alert">
-                Consulta cancelada
-            </div>
-        {% elif consulta.status == 'F' %}
-            <div class="alert alert-success" role="alert">
-                Consulta Finalizada
-            </div>
-        {% elif consulta.status == 'I' %}
-            <div class="alert alert-primary" role="alert">
-                Consulta inicializada, acesse o link imediatamente!
-            </div>
-        {% endif %}    
+    <main id="main" class="main">
+  
         <div class="row">
+
+            <div class="pagetitle">
+                <h1>Consulta Selecionada</h1>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'url_home' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'url_pcnts_cnsltas' %}">Cadastro</a></li>
+                    <li class="breadcrumb-item active">Consulta</li>
+                </ol>
+            </div>
+
+
             <div class="col-md-12">
                 <div class="row">
-                    <div class="col-md-3"><img src="{{perfil.Foto.url}}" class="foto-perfil-card-lg" alt=""></div>
+                    <div class="col-md-2"><img src="{{perfil.Foto.url}}" class="rounded-circle" style="height: auto; max-width: 255px;" alt="Foto do Cliente"></div>
                     <div class="col-md">
-                        <p style="font-size: 20px" class="p-bold">Cliente:</p>
-                        <p style="font-size: 18px">{{consulta.paciente.first_name}} {{consulta.paciente.last_name}}<br>
-                        {{ perfil.Endereco }}
-                        </p>
+                        <p class="p-bold"><a><b>.Cliente: </b>{{consulta.paciente.first_name}} {{consulta.paciente.last_name}}</a>
+                        <p><b>Endereço: </b>{{ perfil.Endereco }} - {{ perfil.Cidade }}/{{ perfil.UF }}</p>
                         <p title="{{dado_medico.descricao}}"><b>Médico:</b> {{dado_medico.nome}} - {{dado_medico.descricao}}</p>
                         <p><b>Data da Consulta: </b>{{consulta.data_aberta.data}}</p>
                     </div>
@@ -48,18 +46,28 @@
                 <br>
                 <div class="row">
                     <div class="col-md">
-                        <p><i class="color-dark bi bi-check-circle-fill"></i> Consulta agendada</p>
+                        <p><i class="color-dark bi bi-check-circle-fill"></i> Consulta Agendada</p>
                     </div>
                     <div class="col-md">
-                        <p><i class="{% if consulta.status == 'F' %}color-dark{% endif %} bi bi-check-circle-fill"></i> Consulta realizada</p>
+                        <p><i class="{% if consulta.status == 'F' or consulta.status == 'L' %}color-dark{% endif %} 
+                                        bi bi-check-circle-fill">
+                            </i> Consulta Realizada
+                        </p>
                     </div>
                     <div class="col-md">
-                        <p><i class="bi bi-check-circle-fill"></i> Consulta Avaliada</p>
+                        <p><i class="{% if consulta.status == 'L' %}color-dark{% endif %} bi bi-check-circle-fill"></i> Consulta Avaliada</p>
                     </div>
                 </div>
                 <hr> 
                 <h3 class="p-bold">Detalhes da consulta</h3>
                 <div class="row mb-12">
+                   
+                   
+                   
+                    <div class="col-md-2">
+                        <img src="{{pet_Consulta.Pet_Foto.url}}" class="foto-perfil-card-lg" style="height: auto; width: 200px;" title="Foto do Pet" alt="Foto do Pet">
+                    </div>
+                   
                     <div class="col-sm-2">
                         <div data-mdb-input-init class="form-outline">
                             <label for="">Espécie:</label>
@@ -76,7 +84,7 @@
                             <input type="text" class="form-control shadow-main-color" disabled name="get_Pet_Raca" value="{{pet_Consulta.Pet_Raca}}">
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                         <div data-mdb-input-init class="form-outline">
                             <label for="">Nome:</label>
                             <input type="text" class="form-control shadow-main-color" disabled name="get_Pet_Nome" value="{{pet_Consulta.Pet_Nome}}">
@@ -158,6 +166,15 @@
             </div>
         </div>
         
-    </div>
+    </main>
+
+    <!--Ativa as opções do menu principal esquerdo -->
+<script language="JavaScript">
+    <!--
+        document.getElementById('components-nav').className ='nav-content collapse show';
+        document.getElementById('sidebar-nav-Atendimento-consultas').className ='active';
+    //-->
+</script>
+
 
 {% endblock 'body' %}

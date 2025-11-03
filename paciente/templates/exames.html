@@ -1,91 +1,54 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 {% load static %}
 
 {% block 'head' %}
 
-    <link rel="stylesheet" href="{% static 'medicos/css/abrir_horario.css' %}">
-    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
-    <link rel="stylesheet" href="{% static 'medicos/css/cadastro_medico.css' %}">
-    <link rel="stylesheet" href="{% static 'pacientes/css/home.css' %}">
-    <link rel="stylesheet" href="{% static 'pacientes/css/agendar_horario.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
 {% endblock 'head' %}
 
+
+
 {% block 'body' %}
-    {% include "partials/navbar.html" %}
 
-    <br><br>
-    <div class="container">
-        {% if consulta.status == 'C' %}
-            <div class="alert alert-danger" role="alert">
-                Exame cancelada
-            </div>
-        {% elif consulta.status == 'F' %}
-            <div class="alert alert-success" role="alert">
-                Exame Finalizada
-            </div>
-        {% elif consulta.status == 'I' %}
-            <div class="alert alert-primary" role="alert">
-                Exame inicializada, acesse o link imediatamente!
-            </div>
-        {% endif %}    
-        <div class="row">
-            <div class="col-md-8">
-                <div class="row">
-                    <div class="col-md-3"><img src="{{ minhas_consultas. }}" class="foto-perfil-card-lg" alt=""></div>
-                    <div class="col-md">
-                        <p style="font-size: 20px" class="p-bold">Dr(a). {{dado_medico.nome}} <i class="bi bi-patch-check-fill icon-main"></i></p>
-                        <p>{{dado_medico.descricao}}</p>
-                        <p class="p-bold">{{consulta.data_aberta.data}}</p>
-                    </div>
-                </div> 
-                <hr>
-                <br>
-                <div class="row">
-                    <div class="col-md">
-                        
-                        <p><i class="color-dark bi bi-check-circle-fill"></i> Exames Agendados</p>
-                    </div>
-                    <div class="col-md">
-                        <p><i class="{% if consulta.status == 'F' %}color-dark{% endif %} bi bi-check-circle-fill"></i> Consulta realizada</p>
-                    </div>
-                    <div class="col-md">
-                        <p><i class="bi bi-check-circle-fill"></i> Exames Avaliada</p>
-                    </div>
-                </div>
-                <hr>
-                <h3 class="p-bold">Detalhes doa Exames</h3>
-                <p style="font-size:20px"><i class="bi bi-calendar3 color-dark"></i>&nbsp {{consulta.data_aberta.data}}</p>
-                <p style="font-size:20px"><i class="bi bi-tag-fill color-dark"></i></i>&nbsp R$ {{dado_medico.valor_consulta}}</p>
-                <a style="cursor: auto;" class="btn btn-dark-color-outline btn-lg">Adicione em seu calendário!</a>
-                <hr>
-                <h3 class="p-bold">Como acessar ?</h3>
-                <p>No horário do Exame acesse o link disponível abaixo</p>
-                
-                {% if consulta.status == 'I' and consulta.link %}
-                    <a href="{{consulta.link}}" target="AcssoConsulta"  class="btn btn-success btn-dark-color btn-lg" >Acessar consulta</a>
-                {% else %}
-                    <a href="#"  class="btn btn-success btn-dark-color btn-lg disabled" >Acessar Exame</a>
-                {% endif %}
-                
-                <hr>
-                <h3 class="p-bold">Meus documentos</h3>
-                <br>
+    <div class="container" width="100%" height="100%">
+        <br>
+        <h2><span class="color-dark">Exames</span></h2>
 
-                {% for documento in documentos %}
-                    <a href="{{documento.documento.url}}" target="_OpenDocumento" class="link documentos"><i class="bi bi-file-arrow-down"></i> {{documento.titulo}} - {{documento.consulta.data_aberta.data.year}}</a>
-                    <br><br><br>
-                {% endfor %}
-   
-                <br>
-                <br>
-                <br>
-                <br>
+        <div class="row" width="100%" height="100%">
+
+            <div class="col-md">
+                <input type="text" name="especialidades" id="" class="form-control shadow-main-color" placeholder="Especialidades médias">
             </div>
-            <div class="col-md"></div>
+            <div class="col-md">
+                <input type="date" name="data" id="" class="form-control shadow-main-color" placeholder="Data da consulta">
+
+            </div>
+            <div class="col-md">
+                <input type="submit" value="Filtrar" class="btn btn-dark-color-outline">
+            </div>
         </div>
-        
+
+        <br>
+
+        <div class="list-minhas-consultas" width="100%" height="100%" style="WIDTH:100%; height:100%;">
+              <table class="table datatable table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Exame</th>
+                    <th scope="col">Detalhe</th>
+                  </tr>
+                </thead>
+                <tbody width="100%" height="100%" style="WIDTH:100%; height:100%;">
+                    {% for Exame in Exames  %}
+                        <tr>
+                            <td><a title="{{Exame.id}}" href="{% url 'url_pcnts_exme' Exame.id %}">{{Exame.exame}}</a></td>
+                            <td><a title="{{Exame.id}}" href="{% url 'url_pcnts_exme' Exame.id %}">{{Exame.detalhe}}</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
     </div>
 
 {% endblock 'body' %}
